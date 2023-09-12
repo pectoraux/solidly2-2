@@ -1,0 +1,966 @@
+* superlikes/superdislikes contract with bribe to enable rewards based on superlikes
+* ssid contracts
+* mines with balance burns
+* baller nfts
+
+authentication gaugefactory:
+ - creates gauges 
+ - enables gauges to mint its badge NFTs as well transfer them
+
+other contracts (subscription, lottery, betting, valuepool): 
+ - has a requirements mapping for each video to put requirements on NFTiket minters
+ - requirements will regard demographics and can be checked through auth gauges NFTs
+
+stake market:
+ - NFTikets can be made non transferrable when publishing their video
+ - badgeNFTs can be attached to listings just like rsrcNFTs for the NFTMarket
+ - admin has immense voting power which it can transfer to other and as such is able to solve a disagreement without needing another vote than his
+ - can be used to process product returns
+ - add field for Google Maps location link when creating a request as well as link to Google Maps
+
+ballerS & ballerX:
+ - can be minted by anyone
+ - sponsors they can be attached to can be blacklisted by other ballers
+
+sponsor nftickets:
+ - write nftickets sponsor contract
+ - call it through pay with contract in the markets
+ - users can include their location so merchants can view purchases per location which can help them make better inventory decisions
+
+catalogNFT:
+ - add voting scheme to its factory with voting power determined by tokenId
+ - add maxInterestRate and ability to update it through factory for payswap
+ - some catalogs are for apps(mobile/desktop) with the apps being downloadable from the interface, devs use it to get ad sponsors for their apps
+ - can be used by collectors to group together all their NFTs into one 
+
+subscriptionNFT:
+ - useful for anyone looking to build loyalty with a customer/fan base: artists, creators, brands, universities...
+
+ARPs:
+ - implements IGaugeBalance
+ - payout can be score based or not. 
+ - the first one enables shared paywalls or the streaming of employee tokens 
+ - it uses a default metric of diff_votes to figure out payout which can be changed into a score fetched from a smart contract or updated manually for each user 
+ - user_payout = user_score / total_score
+ - create a transaction history on thegraph for each accounts to enable users to use ARPs to also track their expenses over time, each credit/debit operation's time, note and amount is saved
+ - enable users to upload documents to their accounts which will be downloadable only by the admin since the docs will be uploaded to the admin's Google dive/dropbox... or ipfs/storj for non confidential docs
+ - enable transfer note to only transfer a portion of the future salary
+ - should be able to use an ARP account to pay in the marketplaces
+ - keep transaction history for each account and each ARP (which is basically a reconciliation of tx on each account with admin account creation, admin fund movement)
+ - using arps for logistics: for every job, users create one account to receive all payments instead of multiple suppliers sending in multiple invoices (see downloaded ebook on phone from shipamax)
+ - can also be used as a receipt app with merchants ringing in external sales through NFTickets 
+ - ability to have addresses encrypted with admin wallet and stored on chain, ecrypt with account owner's wallet and stored on chain, same for info on payments made or due (so suppliers don't know when admins paid other suppliers) 
+ - arps can be automatic => users share of liquidity = balanceOf(_tokenId) on bribeContract or business voter contract
+ - auto arps do not have a balance, only their linked tokenIds do 
+ - arps can have admin issued token (where only admin can issue fungible tokens) or account issued tokens (accounts can issue a # tokens issuedPayable === paidPayable)
+ - ability to make proposals and vote
+ - votes can be used to add/remove admins if the arp has that immutable ability
+ - add ability for admin to renounce rights to withdraw directly from contract 
+ - manual arps accounts can duePayables can be a percent of total liquidity or a specific value, this is determined on an account by account basis
+ - users can mint the same amount of tip token they've been paid in the ARP token, they can also vote to elect an employee of the month 
+ - users can use nftickets to get rewards 
+
+bpnft:
+ - its accelerators is made of companies building games, non-realistic office workspaces, movie scenes...
+
+rpnft:
+ - its accelerators is made of companies building technology for quick implementation of digital twins, realistic office spaces, games in realistic environment, realistic avatars, construction tech(that incorporate cost calculations in order for users to evaluate how much a design/repair... will cost)...
+ - ability to add world download link to rpnfts by code 
+ - codes can be transferred from one world to the other in case of a successful contest 
+ - when a world admin believes to deserve a code more than another, he/she can create a contest and have users vote on whether to make the transfer or not 
+ - worlds are rewarded with emissions wrt the number of codes they have.
+
+NFTicket:
+ - ability for channels to add formNFTs for surveys in case they want to study a certain market to figure out whether a product is needed, how well their own product/services work...
+ - ability for merchants to add estimated time, useful in case of delivery, at the restaurant to figure out when the food will be ready... can be added automatically in case the merchant has put a time for each item + each option + a buffer time to account for the time it takes the merchant to start working on an order
+ - ability for clients to upvote/downvote the estimated time depending on how accurate it was, so future clients can have an idea of how accurate the merchant's time estimates are. 
+ - ability for merchants to use their sales on a product as a GaugeBalance for automatic ARPs (useful in case of a shopify model for homes where landlords add their houses to the same paywall and get pay per wrt booking percentage)
+
+superLikeGauge:
+ - set min badge color
+
+estateManagement:
+ - update timelock
+ - approve max of balance of token to contracts (that way you don't have to transfer 
+ the token to the contract, it can do so itself after the timelock is run)
+ - update mapping(receiverAddress => mapping(tokenAddress => percent of balance))
+ - update mapping(receiverAddress => mapping(nftokenAddress => list of tokenIds))
+ - launch timelock (checks badge color is at least min)
+ - after timelock anyone can run the function to transfer the tokens and nfts
+ - stop timelock onlyowner
+ - update rating description (default is death_certificate)
+
+ valuepools can be used by communities to help each other buy stuffs
+ associate a time to rank in valuepool st rank can be updated if expired even if all users with that rank did not withdraw money yet. Rank deadline is updated each time it is picked
+use a single token Id for each resource (nat rsrc, diamond, gem ...) And associate it to the unit in which the resource is measured. Add the unit param to the resource's struct
+
+Todo:
+ - add ballerNFT to each gauge in the superLikeBribe
+ - inherit from Percentile and keep track of q1,q2,q3,q4 in the Percentile contract
+ - keep track of mean balance in superLikeBribe
+ - add booster when nft holder is claiming revenue
+ - reimburse from sponsorfunds for each burn of nft 
+ - when not enough sponsorfunds use rank = nft.date which is reset to inferior nft dates' holders  
+ - reimburse up to mean at a time and divide nft.percentile by (nft.price / mean)
+ - associate nft.id to active_period of 1 week
+
+ - ability to receive invoices for minting badges 
+ - common gauges can receive and withdraw any token they want 
+ - new tokens are added on deposit 
+ - add isAuth to contributors to enable people to start receiving contributors votes
+ - check unicity of auths by checking their SSID badges only allow gold badges 
+ - only payswap can change a badge's color without going through a vote 
+ - make all pausable, put NFT requirements in befortokentransfer
+
+ add pausable, notcontract, reentrant, blacklists
+
+ GameNFT:
+  - isAuth to blacklist users in GameNFT not factory
+  - update gameContract in GameNFT checks notBlacklisted
+  - gameaddress can update score & deadline & objects
+  - factory can update gameaddress & objects
+  - score & deadline & objects are set to 0 at each gameaddress update
+
+GameFactory:
+ - require(arr.length <= maxArrLength)
+ - invoice have their own token (has to have a liquidity pool pair of it with the bptoken)
+ - invoices[gameaddress] = ({owner, priceperminute, objectstrings, objectsNumbers})
+ - mapping(useraddress => mapping(gameaddress => deadline))
+ - resourceToObject = mapping(gameaddress => mapping(objectstring => requirementsStruct))
+ - objectToResource = mapping(gameaddress => mapping(objectstring => NumRequirementsStruct))
+ - creating entry in resourceToObject requires to be gameowner
+ - creating entry in objectToResource requires locking the resources (anybody can add entry)
+ - users bring resources to resourceToObject to mint objectstring
+ - users bring objectstring to objectToResource to mint resources (NumRequirementsStruct-=1)
+ - enable games to opt out of reimbursing their players who lose 
+
+ SplitContract:
+  - used to split payments between individuals
+  - it is an ARP contract
+ 
+ meltedNFT:
+  - shows the same interface as the original nft with running text showing address of original and specs of the melt
+  - used to divide one NFT into multiple or combine multiple into one (nat rsrcs)
+  - new fractional nfts can be issued and old ones melted back into the original 
+  - the first decreases the share of each NFT and the second increases it, 
+  - only bridged NFTs or NFTs with a price parameter can be melted or combined
+  - in case of a melt anyone that can come up with the price of the underlying NFT can withdraw said NFT given more than half of the fractional NFTs are returned
+  - when the underlying NFT is sold, all fractional NFTs are burned and the balances of their holders credited
+  - funds can be added to the balance of each melt by the admin to reward holders or by a sponsor to post an ad
+
+ Natural resources/diamonds/gems...:
+ - ability to attach a referrer to a geo-code such that each time resources are mined from said geo-code, the referrer gets 10% and the miner 90%
+ - lottery scheme only involves non minable resources such as oxygen
+ - 75% of production to productor and 25% for referrer 
+ - nft is brown if resource is exploited in ecological and humane conditions
+ - silver if in addition to that, 80%+ of workers are local workers
+ - gold if in addition to all that, the resource is transformed into an end product locally
+
+Profile:
+ - registers late days for each arps or contracts the profile was engaged in, this creates a great incentive for tenants and borrowers to pay on time
+ - has ability to follow other profiles
+ - ability to receive tips, users scan qr codes to have the address to send to.
+ - report lateperiods, amount due, since when 
+ - report regular on time payments weighted by voting contract's weight in its factory
+ - secret crush functionality
+ - users can scan profile qr code to follow profile (like exchanging business cards)
+
+ BNPL:
+  - used as payment contract to pay products in the marketplace
+  - uses identityproofs and auditor gauge color to figure out whether to lend 75% to the buyer
+  - pools funds from investors
+
+Most contracts(ARPs) should implement IPaymentContract
+
+Referrer sends in his referrer fee to check the referrer fee is actually valid, if referrer fee has to be lower or equal to that listed by merchant for partnership to be valid
+
+Min ticket price is 0 to enable quizzes to be taken
+Also store merchant's note off chain and send it + buyer's note at buy time
+Private video IDs are stored off chain 
+Private links will not be posted here but stored off chain
+
+- support erc721 & erc1155 in markets & MeltedNFTs
+- add ability to sponsor all resource nfts (deposit funds in nft contract to distribute)
+- update create NFT for valuepool, also change teamShare calculation to look like in the marketplace
+- use either gold, silver, brown, black for text color on NFTicket depending on merchant's gauge color
+- add ability in rp gauge to swap token of previous year with token of current year
+- voting in both marketplaces
+- mines (diamonds, gems, zodiac, galaxy, rpnft, greennft, charliesAngels)
+- swap between different tokens (marketplace, gamefactory)
+- check identity in accelerators, rpnft voter, green voter, contentfarm bribe
+- add approval of fund withdrawal to any contract to enable inheritance 
+- inheritance contract admin can be changed with badge in case of loss of address
+- add nfticket to nftmarketplace
+
+- active_period of 1hour updated per tokenId between each claimPendingRound/checkwin
+- add tokenId mapping to set of plus codes to enable geo-based broadcasting of sponsored content
+- enable free educational content broadcasting for those with the right badge
+- if owner sponsored message/video show, else show general sponsored message/video else
+- farmersFund share can be updated to enable farmers to get loans to buy phones, 
+  farming equipment... by using the fund as an insurance on their loans, lenders can see which tokenIds
+  have been insured
+- in case of default lenders bring the tokenIds back along with a badge attesting of the default for money from the fund
+- people can directly add money to the farmersFund
+- rpnft also have a fund that can help insure loans to finance access to internet 
+- badge can update lender thus forcing owner to sell to actual land owner at real world market price
+- identityproofs in gamefactory to only enable users that have a game approved by auditor to list/withdraw funds
+- add withdraw fungible/nonfungible sent by mistake to all contracts
+- write setelligbleforloan in all nft factories
+- superLikeGauge still has _updateInvoiceDueReceivable
+- badgeNFT should read from gauge and gauge factory to know whether or not to still display info and check expirationDate for nfts minted from SL factory
+- games built on top of rpnft worlds have to give a portion of their revenue to the world or be delisted
+- check chainlink's oracles prices' last update time before using
+- let channels currate their own list of recommended tokens in the swap pool
+- let merchants ask people whether they made purchase decision after seeing an ad or not right after purchase
+- scan video id to find video
+- users who leave their emails (encrypted with payswap pub key) in SLG can participate in a lottery with funds paid by sponsors in exchange of those emails
+- test user cannot withdraw more than cashNotCredit amount when cashback is valid
+- add email hash entry to valuepools to enable sponsors to pay to decrypt users' emails
+- users can search ssi records for info on products history and carbon footprint if those are created and made available by merchant (food accounts for 60% of emissions https://onlinelibrary.wiley.com/doi/abs/10.1111/jiec.12371) 
+- users should be able to downgrade an auditor that received colors from us if number of negative votes fall below a certain threshold 
+- test rewards in marketplace, womenNFT, genZNFT, menNFT, millenialNFT
+- rpnft like subNFT;  subNFT for bp worlds
+- NFT templates for school certification, for fantasy sports
+- to enable rent/mortgage... payments add recurring payments on products of the product & NFT marketplaces
+- merchant lists product with a mapping of product id to struct of buyer & period of payments and max supply set to 1
+- buyer buys product and is added in mapping of product id, max supply is set to 0, user can then pay on a recurring basis, even payments < amount due per period are accepted
+- marketplaces can deactivate nfticket of specific videoId in exchange of credit
+- add title when createAskOrder, the title contains all the keywords of the product 
+- store all titles in an array as well as in a mapping of title to address of buyers
+- a canonical email is created with the title to rank better for SEO (character limit for title == 200)
+- ability for channels to add different types of NFTs users can use (not necessarily burn) to get a discount (can help a channel measure ads effectiveness of NFT ads paid)  
+- add ability to update percent of non dillution for veNFT holders
+- only allow bribes to be withdrawn at week's end after emissions so users do not game the system by voting, receiving bribes, unvoting and voting again 
+- in the accelerators, at least one of the pair's token has to be in our whitelist to prevent users listings a pair of two tokens they completely own
+- amount of token minted per week is the total sum of votes accross business, referral, contributors and accelerators farms 
+- when a user wants to use both the stakeMarket and a valuepool in the marketplace, he first gets funds from the valuepool, funds registered in marketplace 
+st user can use it to call the stakeMarket, in this case stakedValue === payment; if no agreement funds are sent back into valuepool from the stakeMarket, 
+- if they are not used in the marketplace after a certain period, anybody can run a function to transfer them back into the valuepool
+- add deadline to partnerships
+- add lenderProtocol to catalogs and ability to update it from catalog factory so funds can be transferred to a better lenderProtocol in case the catalog lending mechanism does not work
+- sponsors can pass videos through invoiceNFTs through ARP factory, ARPs can opt out  
+- ARPs can apply for loans from the sponsorfunds of the ARP factory
+- mint an invoiceNFT when a protocol is added in ARPs in order to be able to show ads through them
+- to qualify for a loan, you need a badge from a trusted auditor quantifying the elligible amount 
+- add blacklist list for auditors in the SLG factory as well as one for auditors participating in a bounty program
+- add ability to check in the valuepool/marketplaces... whether an auditor is participating in a bounty program
+- add ability to add referrer on a video without partnership to enable ability to share revenue on non referred products
+- add ability to update withdrawable or allocate funds with voter after voting of proposals
+- require users that list rpnft/bpnft worlds to have subscriptionNFT
+- rpnft.request.4.bounties: submit r4bs on codes implemented without permission or implementation, unfaithfulness of worlds to their real life twins 
+- same model for bpnft
+- same model for accelerators, referrals, contributors farms 
+- add ability to push start_payable into the future for subscription marketplace
+- create second marketplace for custodial, same player and pages but options change wrt whether user is connected via email or wallet
+- add ability to offer discounts for owners of specific nftickets
+- add ability in rpnft voter to launch request for bounties and to withdraw minting ability to worlds that lost their request for bounties
+- change inheritance to take wallet addresses instead of ssid, make it so everybody can trigger the transfer, all due inheritances should be visible to all so the transfer can be triggered and the funds sent to recipients whether they know of the inheritance or not 
+- add ability in valuepool voter to trigger the sending of money from the valuepool to the valuepool's payment arp so users can be paid periodically a certain amount
+- keep record of superchats
+- add ability for channels to blacklist specific ssids 
+- add ability for channels to blacklist specific addresses 
+- nfticket: add ability to add a feedback/survey nft to a channel's nfticket
+- individual identityproofs for games 
+- add ability in valuepool to increase probability of selection with nftickets credits percentile which is the sum of prices on nftickets, users that buy stuffs from valuepool's sponsors, get a nfticket with the price of their purchases which they can add to their nfticket credit
+- nfticket credit = sponsor's percentile * price on nfticket, this creates a way to incentivise users to only buy from sponsors  
+- add an updatable weight on the nftickets credits percentile in the computation of selection rank, same for the other 2 params(balance percentile and random percentile)
+- add core and community proposals to valuepools, the first enables users to withdraw funds from the pool whilst the second one does not 
+
+BountyMarket:
+- one for every marketplace 
+- collections willing to subject their partners/users to bounty request create an account with min amount to create a bounty specified and min amount to request for bounty
+- those minimums can be update in which case 
+- each collection has 2 types of partners: levelled and unlevelled depending on whether their bounty amount is up to level of not 
+- request for bounties are created from the marketplace into the stakeMarket and are increased through bonuses
+- the bounty amount cannot be decreased unless it is taken down and a new one is created 
+- collections can specify a buffer time before a bounty becomes elligible to be taken down (prevents manipulations)
+- collections can specify in the marketplaces whether or not they want to only show levelled partners on their profile
+- bounty funds are lent in exchange of collateral
+- in case there's not enough funds in the market to request for a bounty, an nft to which the bounty balance is transferred, is staked in the stakeMarket instead of the balance itself
+- request for bounties can be appealed: when they are won the funds are transferred to the BountyMarket in escrow for an updatable period of 48hrs (updatable by the collection) until the looser appeals the decision of the stakeMarket
+- request for bounties can be for an amount smaller, equal or bigger to the amount staked 
+- ability to require a bounty before partnering or registering to ones channel
+
+Profile:
+- register user email, phone number, password, is 2 facotor auth active or not 
+- show a specific message in the top banner of the site for each client, that way if a client is mislead to another site that looks the same, he/she can detect the fraud by noticing the difference in the message shown at the top 
+
+stakeMarket: 
+- is a sponsorCardReceiver (classifies sponsors by workspace)
+- either party should be able to add bonus claimable under certain circumstances by the other party
+- bonuses are only claimable if there is a "good" agreement on the stake
+- test stake process with NFT + tokens 
+- create a paychat group in each workspace
+- collections can enable automatic stake acceptance to speed up the process
+- add ability to request before accepting a stake
+- each voter has a ssid 
+- 1 vote for 1 ssid and each vote takes 1 week to complete
+- the more veNFT balance a voter has, the more reward per votes
+- voters rewards can be increased on each stake
+- payswap can blacklist ssids
+
+RPNFT:
+ - add ability to lay claim on an rpnft with a bridged property NFT minted by a trusted auditor which contains among other codes, the code of the rpnft along with its real life market price 
+ - this claim with transfer lending rights to the bridged NFT owner forever until the current accepts the sale of said NFT at a maxValue of its real life market price 
+ - this functionality can be switched off by payswap in case it does not yield escompted results 
+ - world creators should be able to map different download links to different years so users can find the right download link 
+ - any single nft can message any other nft in its neighborhood (200 nfts north, south, west and east) and share media with all of them
+
+sponsorCardReceiver:
+- donation credits can be added to a company's paid ad amount
+- to increase their donation credits, companies can give away their excess or impaired inventory — 
+anything from office equipment to clothing — that's collecting dust in a warehouse
+- those are given away to specific channels
+- nftickets received from those donations represent donation credits
+
+MarketPlace:
+- associate each option with a total supply which is decreased each time it is added in a completed order
+- test id proof2
+- test with trustworthy auditors
+- ability to limit number of tickets each unique user can buy (useful when selling shares in an asset to limit number of owned shares) 
+- price AB testing: mapping of collections to array of price where an index of price is randomly chosen and its count incremented
+- funtion to prepopulate array of NFTicket token IDs associated with specific tags: prepopulate(tagName, tokenIDs)
+- enable merchants to manually add credits/cashback to customers (this functionality can be leveraged to write a smart contract that enables merchants to add payment credits to users in exchange of a transfer note of their future salary...)
+- add a destination parameter to collection to send funds to after each sale 
+- implements IGaugeBalance
+- merchants can decide to route each buy through the stake market
+- ability to redirect users to a custom page after a purchase either for a download or access to content
+- paywalls show sponsored content from the partner channel's valuepools
+- user can add payment credits to subsidized payments with a valuepool in case there's not enough in the valuepool 
+- add to cart button on product page 
+- cart can be sent to another user who can pay, with fields funds source & client specified  
+
+ReviewsCard:
+- has a player to display media: helpful to provide a more detailed review, in the case of a fashion brand for instance, watching how clothes fit various customers can help future ones figure out the right size for them.
+
+NFT marketplace:
+- ability to enable sellers to have users buying other NFTs automatically buy theirs as a backing NFT 
+
+TrustBounties:
+- add a unlockTime parameter which is the time from when the bounty can be closed by the owner
+- ability to use a balance on a GaugeBalance contract to back a bounty 
+- bounties can be back by multiple balances thus giving direct access all those funds to the stakeMarket in the event of a claim
+- when a claim is made a stake is created in the stakeMarket with value staked, voters rewards...
+- if disagreement, voters decide if the claim is valid or not
+- losers of claims have up to 1 week to make an appeal with a 1/10th of the value they put in(total bounty for bounty issuer, and min for claim for bounty hunter) 
+- funds only move to the stake market after the bounty is lost by its owner 
+- terms can be made confidential
+
+IGaugeBalance:
+- interface for all contracts that implement a function that lets the stakeMarket withdraw funds from a balance as a bounty
+- those contracts also have a minimum amount on balance equals to the amount of the bounty and valid until bounty expires
+- a previous minimum amount has to expire before a new one is set unless it is for the same bounty
+- can authorize other users to add a minimum balance lower or equal to a specific number
+
+Valuepool:
+- enable users to grant permission to others to use their account through claim with permit which uses permit functionality of wallets
+- add a new factor to compute user's rank: superDiff
+- add ability to enable users to withdraw their gains in tokens directly
+- its tokens can be used as equity/debt tokens in the accelerator
+- implement functionality to burn token in exchange of fund value (useful to reimburse debts)
+- implements IGaugeBalance
+- only people with va can view votes: makes votes confidential
+
+Profile:
+ - add ability to receive funds 
+ - add ability to record credit from money/school items... lending/borrowing activities  
+
+Subscription MarketPlace:
+- use the same paywall for multiple collections 
+- write putUpExistingPaywall function for new collections to be able to put up an already existing paywall from another collection as their own
+- implements IGaugeBalance
+- add cancellation surveys when users updates autoCharge to false
+
+SuperLikeBribes:
+  - a page list all superLikeBribes, deposit votes on SuperLikeVoter
+
+SuperLikeBribes2:
+  - these use GameNFTs that register data about gauges to deposit into a gauge's balance
+  - data like subscriber/like/comment/view count on specific social media can be used
+
+Subscribe to earn:
+  - has a gamefactory deployed
+  - uses GameNFTs that register data on subscription pages
+  - data registered is related to user's actions (liked a video, subscribed to a channel,
+  commented on a video, disliked a video...)
+  - user first buys time or adds it for free, then go the subscription page, takes action
+  - subscription page adds action to GameNFT
+  - user becomes claims reward
+  - sponsors can add sponsor cards to the page
+  - these sponsor funds are later on added to the game's budget in gamefactory
+  - check isNotContract 
+
+Search to earn:
+  - also has a gamefactory and follows the same model except the subscription page
+  is replaced with a search page that uses google search's api to display search results
+  - sponsors can add sponsor cards to the page
+  - these sponsor funds are later on added to the game's budget in gamefactory
+  - users can add a search action to GameNFT at least an hour after their previous action
+  - check isNotContract 
+
+GameNFT:
+ - add ability similar to superlikebribe of adding rewards to all nft holders
+ - tokenId share is determined by percentile 
+
+Turn every game into play to earn:
+ - auditors are the team and owner of the game 
+ - gameContract can withdraw funds from gamefactory and share between auditors
+ - auditors deliver badges to players testifying of their scores or whatever metric the gameContract uses 
+ - users use the badges to write their scores on their GameNFTs
+ - the more badges from a certain auditor are used to write scores on GameNFTs, the bigger share of the teamShare the auditor gets 
+ - before playing, players first buy services of an auditor, buy minutes and then start streaming on twitch/youtube/paychat... with the auditor as well as their fans watching
+ - once the number of minutes bought is ellapsed, the auditor puts the score down and delivers the player a badge testifying of that score 
+ - independent viewers can vote down in the gameContract, any auditor that they believe to be defrauding the system by testifying to false scores 
+ - all badges are visible from the gameContract
+ - identityproofs are used to validate which accounts can add themselves as auditors and which users can play
+ - auditor's original_payout = profit * num_badges_delivered / sum_across_all_auditors(num_badges_delivered) 
+ - auditor's payout: if mean(negative votes) < auditor_neg_votes: payout = original_payout * mean(negative votes) / auditor_neg_votes
+ - auditor's payout: if mean(positive votes) < auditor_pos_votes: payout = original_payout * auditor_pos_votes / mean(positive votes)
+
+Tontines:
+ - Admins will have users who are in a valuepool write their valuepool address as well as their account in the valuepool in their description
+ - Admins can use their percentile in the valuepool to figure out the order of payout making sure those with the highest percentiles .i.e. lowest probability of default are paid first 
+ - Admins can also use other means to determine probability of default like a GameNFT scoreboard or price of NFT staked or an auditor's badge either attesting to the ownership of a certain wallet by user, of user's regular payment in other Tontines or anything that shows low probability of default.
+
+DNtwrk:
+ - modify st it is able to match anyone from a group to someone from another group 
+ - add ability for users to blacklist certain tokens so they don't get matched to someone they've already been matched with
+ - townMeentingsNFT: users  buy into the town they are living in and once every 24hrs they are randomly matched with somebody else from their town until they've met everybody in their town 
+
+
+- fakeNewsDetector: saw fake news, report it, or browse and vote fake/real on news someone else reported
+- want to check if some news is fake or not, search for it to see whether it's reported and what the vote is on it 
+- or make the entry so people can tell you whether it is fake or not 
+- set up a notification to get notified on a new entry in a category that interests you 
+- fakeNewsToken with equal vote per user, users get rewarded each week for the number of proposals on which they vote correctly
+
+
+- add object 'Wishes' to enable people to make a wish in the rp or green worlds for an implementation
+- the more voting power the wish creator holds the more chances the wish stands to get realized 
+
+- celebrityGame: the celebrity of the day is picked randomly and users who come with a badgeNFT from the designated celebrity get a score 
+- there is a different score for meeting him/her in person than for subscribing to his/her social media
+- lostNFound: same model for finding lost people, pets, items.
+- datingGame: same model for hitting on girls, girls add themselves to different events, players go to those events, hit on the girls there 
+- anyone can add an event venue provided a budget is also provided for players and girls. 
+- the girls from the NFT at the event that they hit on can give them a score between 1-5 
+- players' scores are computed by adding all scores from girls 
+- girls shares are computed as a percentage of total players that hit on them  
+- eventsGame: celebrity games at events, event organizers create a venue with a certain fund which can be add to by other parties, users play for those funds 
+- revenue is shared as is: event_fund  + (event_fund / total_event_funds) * (total_from_sponsors + total_from_players)
+- venue creators choose who the celebrities(people you need to get badges from) are.
+- bountiesGame: protocols/companies... put in create a bounty, players go through their code, find bugs, report them to the protocols which give them badges with a score from 1-5. 
+- a hunter's bounty = (score / total_score_4_protocol) * protocol_bounty + (score / total_score_4_all_protocols) * sponsor_fund 
+- sponsor_fund is funds from anybody supporting the protocol or funds paid by companies to show ads to the protocols 
+- hunters only need their badges to claim funds and there is a different NFT emitted to protocols when they add themselves to the game 
+- players on the other hand need to use their gameNFT to bet on the next protocol to get claimed
+- player's win = total_vote_for_player_bet / total_votes * (gameNFT_sponsor_fund + tickets_money)
+- stdGames: get tested for the game's std, get a badge attesting to your test (you get paid whether ur infected or not)
+- buy minutes in the game and use the badge to increase your score by one which set your active_period = block.timestamp + one_month
+- your goal is to test yourself once each month, skipping months with reduce you score
+- gains are claimable every 3 months, the accepted auditors can be seen from the partners section of the game's channel 
+- same model for regular checkups with min_duration between checkups being 3 months and gains claimable each 6 months 
+- same model for regular dentist visit with min_duration between checkups being 3 months and gains claimable each 6 months 
+- live game streaming gameNFTs: users stream their plays on Youtube/Twich/Jitsi... and have their fans vote for them, the vote is considered the score 
+- same model but limited for single games.
+- same model for the best lego projects (Brickit)
+- same model for freestyle football, dancing
+- same model for farmers and breeders to extract additional value from their animals(dogs, cats, monkeys, chicken, horse, bull...) by having them compete in contests involving fighting/running/eating... all sorts of sportive activities (Westminster Kennel Club Dog show)
+- same model for houses where users vote for the best houses
+- same model for work to learn education programs that compete for the first spot 
+- same model to stop people from smoking/drinking/drugging themselves: users work with auditors that give them scores based on their success, addicts join chat groups of people suffering from  their conditions, find themselves an sponsor who will follow them and give them scores based on their progress, users buy minutes in the gamefactory (sponsor brands can be credit mutels...)
+- same model for ski with devices tracking activities (Carv) and auditors validating those and assigning scores 
+- same model for couples: with min_duration between checkups being 3 months and gains claimable each 3 months, score is number of days the couple has stayed together since buying their minutes
+- same model for blood/organ/sperm... donors (donors enter games as teams st the more donors a team has the higher its score)
+- esports: tickets sold to 20 teams per league each league is centered around games in the blue worlds. The best performing games (multiplayer) are sold first 
+- esports: around fortnite... 
+- competition for the most attractive face, body, haircut, hair...
+- credit score competition: users get their credit score evaluated by an approved auditor and are rewarded when the can grow that score. The game score is: current_score - initial_score with initial_score updated each time you enter a new score and are rewarded. 
+  Users can also join a team they will find on the channel to work on upping their scores together. 
+  Auditors are either banks or people that will validate users credit score that has been computed by a third party. All scores should be on the same scale or converted to the game's scale which is the FICO score scale. 
+  There is a weight attached to each score and that weight is determined by the amount of (upvotes - downvotes) received by the score auditor with each vote weighing the same as any other one and only players being allowed to vote (ssid is checked for each player to guarantee unicity). 
+  So score = current_score * current_auditor_weight - initial_score * initial_auditor_weight
+  For the US, use creditkarma.com or annualcreditreport.com to validate users' scores (have an extension capture it from the site).
+- cardiac rehab games (another.movingAnalytics) 
+- anti-inflation games: users buy minutes to launch their game. when  they inflation rises in their country, they get an auditor to validate the rise in the inflation since they launched their game. score = auditor_weight * rise_in inflation * Min(num_minutes_bought/num_minutes_since_game_launch, 1)
+- live to earn: users buy minutes and their score: still_live * Math.min(num_minutes_bought, num_minutes_since_game_launch)  with still_live = 0 if dead, 1 if living, between 1 and 2 if has used partner funeral company services, whether it's closer to 2 or 1 depends on the contribution of the sponsor to the valuepool.  Auditors testify to your still living and their testimony weight is based on the number of votes they receive. This way people that live longer get another source of income to support themselves, 
+  uses a valuepool supported by companies offering products/services to help you live longer as well as funeral companies since the game allows one relative to start with a higher score if they uses services from a supporting funeral company for a recent death in their family.
+  gains are claimable each 12 months after a session has been started. claiming your gains also closes your session .i.e. you will have to start another session so to boost your earnings it is better to wait until the last minute .i.e. your retirement
+  the game's channel partners with channels giving advice on tricks to live longer: what to eat, how to exercise, how to reduce chances of an accident, security guards for hire, protective wear, spiritual practices, meditations, places to live...
+  auditors are employers that introduce the game to their employees or other third parties 
+- earn after death: same model but to reward the family of people that die: still_live in this case is 0 for the living and 1 for the dead and goes up to 2 in case of use of a partner's services after death
+- auto insurance: auditors are mechanics that fix customers cars at a discount, with the customer paying just for the parts or for entirely free depending on their business model and the user's weight. Auditors' scores = diff_votes / total_diff_votes_auditors; their share = 99% of fund with 1% for the team. vehicles range from bikes, to cars and trucks (electric or mechanic)
+- auto insurance: users contact mechanics to audit their cars then buy minutes on a gameNFT which they use to create a stake in the game contract with the mechanic, the stake contains up to how much in damages the machanic is willing to cover. If the user gets into an accident before his/her minutes run out, he/she can get the car fixed by the mechanic for free. mechanics have bounties that can be claimed in case they are dishonest. mechanics score = coverage_percentile / sum_of_coverage_percentiles   
+- drive safe to earn: users buy minutes and each 24hrs interval get their vehicles audited by mechanics who attest to it having or not having being in an accident in the last 24hrs. Users vote for auditors which consitute his/her weight. User score = auditor_vote_diff * accident * Math.min(num_minutes_since_game_launch, num_minutes_bought). vehicles range from bikes, to cars and trucks (electric or mechanic)
+- save energy to earn: your score is type_of_energy/energy_consumption with type_of_energy = 1 if normal, 2 if electric, and between 1 and 2 st type_of_energy = 1 + percent_of_consumption_that_is_green
+  auditors can be companies helping people save energy, selling devices that will cut the energy feed multiple times during the day or companies installing devices to compute a player's energy consumption 
+  sponsors can be governments or companies willing to incentivise users to spend less energy so more companies can have energy
+- literacyGame: participants are either schools, non profits, individuals teaching students how to write. Only students that meet the UN definition of out of school children can participate towards the score of a player 
+  auditors compute the score of players based on their rating of the children's ability to write and speak in a specific language st the more languages a child speaks, the better he/she speaks or write the more points the player gets 
+  a player's score = auditor_vote_diff * auditor_score_4_player. Each student needs to have an initial score updated at each audit such that student_score = current_score - initial_score. languages also include braille
+- football to earn: auditors are companies selling trackers and that deliver badges with scores to their users at their request, users then use that badge to record their performance in the game and get rewarded. their score is the diif between initial score and current score times auditor weight
+- another.bounty: buy a product from one of the sponsors of the game and start posting reviews about them on your favorite platform (TikTok/Youtube/Instagram/Cancan...), use auditor badges to update the game on your view counts. score = auditor_vote_diff *  view_counts / total_diff_votes_auditors. Each user creates an account in the gameContract with addresses where reviews are posted.
+  the game has a channel in the nft marketplace to enable users to post licensing rights to their best performing content in NFT format for brands to buy. The game is supposed to be played by real customers that would have purchased the product anyways.
+- bodyCount fantasy game: players sell the NFTs, users buy those to play in multiple fantasy games that either reward NFTs with high bodyCount or a low bodyCount. Different games have different techniques for tracking bodyCount: installing sensors on genitals, self reporting with trust bounties for anyone who can prove the reported number is false, reporting by players' boyfriend/girlfriend...
+- same model for weight loss with devices to track user's eating like a device around user's neck...
+- returnsGame: sponsors are merchants willing to cut their return fees or climate conscious individuals, players are delivery agents or any entity returning buyers' items and getting a vote from the merchant. score = merchant's weight * number_of_returns * item_category_factor; item_category_factor determines how hard the item is to return which includes weight, distance... 
+- the quizGame: quizzers submit partnership requests on game's channel followed by a trust bounty, start posting online courses they are willing to do a quiz on with options being different section of the courses. Students book quiz sessions by paying quizzers and then pay for minutes in the game. After their quiz in Paychat, quizzers update their score in the game 
+  score is calculated wrt course_difficulty_factor (mean_course_scores/sum_of_means_of_all_courses). updated_user_score = previous_user_score + course_difficulty_factor * user_course_score
+- same model for corporate learning
+- same model for the interview.on.demand channel 
+- same model for language learning where not only quizzers but learners put up bounties certifying which language they speak and which ones they don't
+- same model to help students prepare for different exams with only audited students allowed to play 
+- prisonersGame: prisoners sell their NFTs, users buy those NFTs to play the game, the score of a prisoners' NFT = number of jail time, the longer he stays out of jail the more NFT he can sell
+  his score goes to zero the moment he goes back to jail, each prisoner has a paychat to share his life 
+- prisonGame: scores prisoners on good behavior in jail, score = number_of_week_in_jail - number_of_week_with_bad_behavior
+- real estate license exam game
+- home rehabilitation games: patients recovering from a stroke or other type  of physical conditions, buy minutes and get badges from auditors (can be companies making devices such as The Neuroball by Neurofenix, health practitioners...)
+- companies energy game: scores are based on companies' energy efficiency and operational workspace
+- green companies game: scores are based on percent of green energy and operational workspace
+- rating game: different people meet each other for a date IRL and rate each other after the date on 6 metrics: intelligence, masculinity/femininity, fashion sense, face cuteness, body hotness. Each rating goes from 0-10, 6 scores are computed one for each of the five categories and a mean of all 5
+  the best score amongst the 6 is the user's score. mapping(uint => Date[]) which maps tokenIds to array of pending dates. a date object has elements: venue tokenId, partner tokenId, day, a score for each category
+  a date object is created using an NFTicket from a partner venue, for a date to be valid it needs to be created by the venue, and both partners. venues are visible from the game's CanCan channel. Users can apply to meet one another from the channel's stakeMarket
+- countries game: one team for each country, teams play by enlisting citizens from their country, ssids are used as proof of unicity. team score = number of members in their team. a new game is launched each week. 
+- video game streamers: streamers put up a bounty that can be claimed by anyone viewing his/her stream, streamers update their own scores and item won. to grant a score, the game contract checks whether the player account has a bounty that is a specified percentage of the amount that can be won with said score. that amount is obtained by querying the game factory 
+- bug bounty game 
+- flip coin game
+- iq test game
+- meditation contest: users stream themselves meditating, the one that receives the most votes gets the best score.
+- language translation games: voting game for the best channels offering the best translation in the translation channel where users publish content either as request for translation or a translation
+- fantasy game for the best fragrance brand, people buy approved fragrance NFTs from frangrances catalogs to play.
+- dating.game: girls are the players, they go on dates with various guys that sponsored the game. After all the guys got a date, the girls pick the best guy and win the prize if that guy turns out to be the most picked
+- good.user.games: companies create this game to reward users that preserve their device/product the longest. You buy minutes in the game, add more minutes later on and cash out after a certain time by bring your device back to the admin of the game.
+  your score is: time_since_purchase * state_of_product_factor.
+- competition to rank the best lawyer/teacher/civil engineer...
+
+SSI:
+- add start(time the data becomes accessible) and deadline(time the data becomes inaccessible) when sharing data with recipient
+- make start updatable via outbox
+- users can just send data to recipient or send & mint (this option sends the data and mints an NFT with the question, auditor address which user can later use to claim rewards in case recipient offers them)
+- users should input a password before sending data to ipfs or decrypting it
+- use Pinwheel/Argyle/Truework’s APIs to verify user's income, do background checks...
+- mapping of wallet address to identity code and mapping of identity code to ssid => to add new address, login with face and map identity code from face to new address
+- in case of loss revoke access of address to identity code which blocks link from address to ssid
+- ssid increments by one for each new identity code.
+- ssids can be used to fight off bots on social media platforms
+- users can mint a badge for each data shared with a 3rd party, they can then use that badge to get free entry into any lottery scheme designed by that 3rd party.
+
+Transfers:
+- sends funds into receiver gauges which only allow funds to be retrieved that are backed with a bounty of at least the same amount. Balances are reinitialised every week giving ample time for the bounty to be claimed in case of fraud 
+- transfers page enables either transactions backed by a bounty or scheduled ones that stake users' funds and enables them to be transferred after the deadline giving time to anyone to spot and alert the sender in case of a fraudulent recipient. Users also provide information about the reasons behind the transaction which will further help white hackers figure out its legitimacy and submit an alert on the transaction. Users can go through the alerts and vote for the most helpful ones. Each transaction comes with a 0.3% fee distributed to accounts that submit alerts based on their votes 
+- recipients of transactions can also cancel them in case they were not the right receipient for instance 
+
+update checkIdentityProof to also check ssids against previous ssids
+
+before receiving any fund into a game/bet/lottery check each time whether the audit used to list the game/bet/lottery is still valid
+
+add brand names to all valuepools and let any company that has an active sponsorship with the valuepool to use the brand name just like a franchise
+valuepool names follow the formula: consonant-i consonant-i (going through the alphabet: bibi, cici, didi, fifi...)
+
+
+{SIGMA} open source work elligible for contributors farms:
+ - remote lock/unlock after detecting event from a purchase (rental companies), ring in purchases (autonomous shops)
+ - AR try out or measure (for shoppers, tailers. try on make ups, clothing, shoes..., take measurements)
+ - remote control of lighting/locks/tvs and all sorts of home/office devices from a paychat room
+ - QA and improvement of open source code present on cancan
+ - data analysis projects that offer valuable insight to cancan businesses
+ - customer service projects that help cancan businesses' customers
+ - route optimization based on location/load/weather/traffic..., live tracking(can be transmitted into the metaverse) 
+ - browser extension
+ - Avatar in video call 
+ - integration to other fintechs to enable users to move money between us and them
+ - VR/AR tech to cure ptsd, psychological conditions...
+ - live chat (text/voice) translation
+ - phone lock screen displaying valuepools' sponsors ads
+ - paychat apps to estimate credit worthiness, detect diseases...
+ - tools to help businesses understand trends like customer lifetime value, churn, and business analytics 
+ - internal apps or specialized tools for businesses (another.retool, another.airplane, another.superblocks)
+
+sponsorships to contributors, businesses, referrals and accelerators farms with lottery system to distribute sponsorfunds
+for receiverToSender products validate totalSupply === fundsAvailable / unitPrice 
+
+contributors worlds:
+ - Security: smart contract or front end security works (except in the law workspace where emissions are used to reward lawyers that engage in litigations to defend the platform against hackers/scammers/criminals... or companies that agree to the platform's terms of service but fail to adhere to it. Either that or any law enforcement that goes after criminals on the platform)
+ - UX: front end UX (either improving on current one or submitting a new redesign of the web/mobile/extension app)
+ - Extensions: work around VR/AR apps, anything in {SIGMA} above
+ - Customer Service: to reward anyone doing customer service to at least one business 
+ - Any open source project can create a world to incentivise its own developpers 
+
+
+- add localization tags to the registration to channels form 
+- use CurrencyInputPanel in game factory to get pool address and amount 
+- add a terms and conditions agreement forcing companies raising funds in accelerator farms to provide some utility with their token or have it be a tokenized version of their actual company share depending on which option they choose (grant/debt/equity)
+- accelerators' farms can grant more voting power to users with the right badges which can be obtained from trusted instructors after completing their investment courses 
+- enable channels to have multiple workspaces
+- users should not be able to borrow if they have more than a max value of loans pending (that number is based on their history or auditors scores)
+- resources with a discoverer always mint 10% to the discoverer
+- add 2 more fields to natural resources, diamonds and gems: mine(the mine where it was extracted) & discoverer(the entity that discovered the mine)
+- create an animalNFT with ability to add animals to rpnfts, can help protect endangered species
+- add ability for users to add tokens on the vesting list
+- home/auto/health services/products sales channels partner with insurance channels or valuepools
+
+
+- add option to buy ads on products page, check that all implemented functions have a button
+- add ability to buy with credit card 
+- use save to watchlist as a cart in the marketplace
+- add options to products page
+- show pop-up to tell user to find terms and conditions of the channel in the legal section along with an agreement to payswap's terms and conditions
+- before they are able to withdraw funds from their gauges, companies in the accelerator fund need to be audited by trusted auditors and be found not a scam
+- the slg factory has a list of alternative data sources like late days from the marketplace, diff votes... With the mapping of each source to its weight. The resulting score is used to compute a lending limit. It's also usable in a game that works the same as the credit score game
+- users can submit a video when registering 
+- filter products by max supply
+- have users submit an introductory video of their channel that is shown in the channel header
+- onramp: add option to send gas fees, 1usd in native coin is sent along with the rest in the tFiat 
+- give seller option to show a survey page before payment completion or after
+
+sellers can add external payment source name and link and have it displayed on the product page next to the Buy button: Buy with %external_payment_source_name%
+
+Things to add when editing pools:
+ - add social media emojis with links like found on the IFO cards 
+ - fix No bribes being picked as default
+ 
+ - ability to click on a send funds on a channel to be sent to the swap page with the recipient field prepopulated
+ - add support for unstoppable domains and cancan username on the swap page
+ - count number of views (cancan) 
+ - send notifications in paychat discount channel for each new discount created
+ - send notifications in paychat channel when passing by a store that offers discounts
+
+
+
+TODO:
+  - reviews //
+  - update tFiat //
+  - ability to add bounty
+  - list backings (channel and product backings) as well as warning in case of no backings//
+  - add ability to report a product to its auditors //
+  - feature partner valuepools and the stakeMarket addresses in the contract section of buy
+  - add payment credits to user //
+  - add new paywall to product //
+  - processAuction
+  - closeListing
+  - processCashBack //
+  - burnForCredit //
+  - sponsor button //
+  - updateBurnTokenForCredit //
+  - reinitializeIdentityLimits //
+  - reinitializeDiscountLimits //
+  - reinitializeCashbackLimits //
+  - cancelAskOrder //
+  - modifyAskOrder //
+  - modifyAskOrderIdentity //
+  - modifyAskOrderPriceReductors //
+
+  - createAskOrder //
+  - updateBlacklist
+  - claimPendingRevenue //
+  - fundPendingRevenue // 
+  - fundPendingRevenueFromNote
+  - claimPendingRevenueFromNote
+  - transferDueToNote
+  - modifyCollection
+  - updateCollectionTrustWorthyAuditors
+  
+  - cart 
+  - lock stake with valuepool or another contract
+  - addCollection
+
+GameFactory:
+  - addProtocol
+  - update Info (email, description, links...)
+  - update protocol
+  - deleteGame
+  - createGamingNFT
+  - sponsorGame
+  - fundWithValuePool
+  - buyGameTicket
+  - claimGameTicket
+  - reimburseTicket
+  
+Valuepool:
+  - updateDepositThreshold //
+  - updateMaxWithdrawable //
+  - updateMaximumArraySize //
+  - updateBNPL //
+  - updateAddtoUserBalance //
+  - updateLenderProtocol //
+  - addToLender //
+  - notifyWithdrawFromLender //
+  - createNFTicket //
+  - withdrawTreasury //
+  - updateNFTDev //
+  - updateMerchant //
+  - updateFactory  ====
+  - updateCheckFactory  ====
+  - addInvoiceFromFactory ====
+  - addToUserTokensSet //
+  - removeFromUserTokensSet //
+  - addInvoice //
+  - updateMaximumNumberOfActiveInvoices //
+  - updateReimbursable //
+  - updateTreasuryShare //
+  - updateAdminShare //
+  - updateMaxReqPerDay //
+  - updateMerchantIDProofParams  //
+  - updateMerchantTrustWorthyAuditors  //
+  - withdrawTreasury  //
+  - deleteInvoice //
+  - claimReward  --
+  - pickRank --
+  - claimRank --
+  - getPeopleBefore --
+  - reimburseLoan //
+  - deposit //
+  - updateCartItems //
+  - lendToLender
+  - withdraw //
+  - notifyRewardAmount
+  - both users and admin can blacklist certain merchants
+  - accounts can add multiple addresses to their authorized users (certain valuepools can require each new user to have an idproof like testify_child_of_[account owner ssid], testify_employee_of_[account owner ssid]...)
+
+paywalls should check for tokenId of subscription, not address 
+currency is associated at the product level
+keep track of NFTicket token IDs per tags on thegraph
+change bribes/nobribes to bribes/sponsors with sponsors being gauges funding the different voter pools
+in the contributions' farm change it to the different sections of the contributors' world: UX/security/customre service/projects/business apps
+for arps change it to manual/automatic/sponsors: manual = normal arps, automatic = arps that read their amount payable from an another contract, sponsors = businesses paying to be featured here (their sponsorship fund is used to provide salary on demand in the qualified arps)  
+
+SSID creation flow:
+ - user shares screen with auditor so he/she can check it is the actual user attempting the creation
+ - user attempts proves he/she does not have a facialID by attempting authentication
+ - while authentication succeeds, delete previous facialIDs and downgrade their associated SSID
+ - when authentication fails, enroll new user, genreate ssid by encrypting new facialID with user public key
+ - user then sends new ssid to auditor who validates it 
+
+ARPs can be used for EWA (Early Wage Access), supply chain funding, Tontines, etc.
+
+1badge to back multiple products 
+add valuepool logic to buy wizard
+show claim only for valuepools with cash rewards
+LightOff: energy companies put fundraise products of future light offs 
+Merchant applications are partnership request for VP channels 
+Add buy with rewards which makes purchases as the VP instead of as the user to VP page
+List VP NFTs 
+Testify partner to become partner without permission
+Add VP tab to GameFactory to list all game VPs
+
+ARP:
+ - To display: token, cancan_email, creative_cid, video_cid, website_link, description //
+ maxActiveProtocols, size, //
+bool autoCharge; //
+uint amountPayable; //
+uint amountReceivable; //
+uint paidPayable; //
+uint paidReceivable; //
+uint periodPayable; //
+uint periodReceivable; //
+uint startPayable; //
+uint startReceivable; //
+address fromContract; //
+uint sharesRemaining;//
+pendingRevenue, //
+MaxNotesPerProtocol, //
+invoiceNFT address //
+immutableContract, // 
+cosignEnabled, //
+minCosigners, //
+admin address, //
+autoCharge active, //
+tx history per account and general //
+uploaded docs //
+getAllDuePayables, 
+getAllDueReceivables, 
+all isBlackListed, 
+protocolNotes, 
+ - Commands: updateBlacklist, withdraw(some/all), deposit(some/all), payInvoicePayable, notifyRewardAmount, payAllInvoices, deleteProtocol, updateProtocol, updatePaidPayable, sendInvoice, addProtocol(FromContract) 
+ claimPendingRevenueFromNote, claimPendingRevenue, autoCharge, autoChargeFromContract, autoChargeAll, updateAutoCharge, transferDueToNoteReceivable, transferDueToNote, updateNFTDev, createInvoiceNFT, 
+ updateMaxNotesPerProtocol, updateMaxActiveProtocols, updateDescription, updateWebsiteLink, updateCancanEmail, updateCreativeCid, updateVideoCid, payInvoicePayableFromContract, upload_docs
+
+
+Climate: 
+ - Commands: add carbon credit, upload media, update links/name/description, withdraw, create bribe, add to bribe, vote up/down, update geo-codes, mine geo-codes
+ - users that recycle, donate their used items can have an agent grant them carbon credit if they provide proof in the form of nftickets
+ - nfts can be minted along with the right carbon credit for companies selling electric generators to prevent the use of fuel based ones or other solutions that prevent burning fuel or generating more CO2
+ - this will help subsidize the price of the solutions and make them more affordable for users 
+  
+rpnft:
+ - Commands: buy world, upload implementation, withdraw from nft, upload media, update links/name/description, withdraw, create bribe, add to bribe, vote up/down, update geo-codes, mine geo-codes, view lottery & sponsors
+
+bpnft:
+ - Commands: buy world, upload implementation, upload media, update links/name/description, withdraw, create bribe, add to bribe, vote up/down, view lottery & sponsors
+
+badgeNFT & bridgeNFT:
+ - contain link to audit report if one exists 
+ - issue badges for trust bounties which users can use to prove they have an active bounty in place
+- bridges of houses have POI (Point of Interest) information: possible schools/restaurants/malls... in the neighborhood
+
+climate worlds:
+ - add ability to add plants like coffee, cocoa... 
+
+mine lottery for marketplaces
+add percentile computing in ve contracts to figure out colors based on total ve supply
+use proposal page layout for product page when product is article
+
+pitch affiliates/referrals as refermate on republic
+pitch climate worlds as terraformation on republic
+competitors (curios on republic)
+
+we provide business in-a-box
+
+companies that create movies and visual effects need the ability to create physically accurate virtual worlds. they can purchase bp worlds for that.
+with bpworlds, any small production team can make movies with stunning visual effects.
+
+explore personalized videos (maverick with deep fakes, shotstack api, deepfacelab)
+use sudoswap code to create pools of nfts with tokens to enable uniform pricing of services among merchants (a nft token for moving a person 1 mile on ground/air/sea, an object 1 mile, 1min of distraction,...)
+price reporting system to enable sellers to share their prices, build a chart to show the evolution of prices for different products/services
+
+crowdsourced pricing: price chart for various items with price updated by approved accounts. Useful for various actors to figure out the right pricing of various items. any user can start his/her own price chart and grant 
+edit permission to his/her approved accounts. Charts also include social proofs: # of likes/dislikes # of superlikes/superdislikes
+
+an extension that shows you sponsors selling the product you're searching for on google
+use stripe data on user to create verified data in ssi
+
+contribution projects can be projects building software/hardware for businesses in various industries(construction, retail, supply chain, robotics...) to optimize and streamline their operations
+
+extensions to compute taxes (Binocs)
+
+BILL:
+ - form of ARP suited for taxes and other billing systems with the ability for users to notify the contract at each credit/debit event 
+ - admins of the Bill contract handle anything that has to do with the tax/bill's computation and possibly payment
+ - users can pay off their tax/bill balance using a valuepool.
+ - can be used to implement another.metronome to offer billing infrastructure that helps other software companies launch usage-based business models
+  
+recurring TrustBounties
+
+tFiats:
+ - ability to blacklist address to prevent it from tranferring tokens
+ - add checkIdentityProof
+ - use auth so admin can be a group of people instead of just one 
+ - add tokenId to token so users can know the which tokens were minted before which
+
+add adminFee to bounties and stakeMarket
+
+catalogs can be used for books so they can be subsidized by sponsors and accessible for free
+
+valuepools can used for insurance with voting used to approve claims.
+
+BP worlds:
+- owners can port and install their users on new platform. Someone with millions of followers can just install those followers on new social networks .i.e. an account will be created for each of their followers and those accounts will be made to follow the owner.
+- build cancan as a mall in bpworlds
+
+affiliates:
+- uses a bounty to guarantee users don't use fake clicks
+businesses:
+- add ability to take down a product not in the right marketplace through vote.
+
+check overflow, storage, reentrancy (sending funds before updating internal state)
+check other functions (from inheritance) cannot bypass
+use a contract and revert to block a functionality, the absence of a fallback/receive function has the same effect
+check for delegateCall
+selfdestruct to not call receive and force send tokens
+with .call() you can specify exactly how much gas you want to use.
+.send or .transfer have limits on gas, .call doesn't so a contract that calls it can be hack by DDoS 
+think of returning different value everytime you call the function (like for shop)
+it is better to let users withdraw funds rather than push funds to them automatically
+Avoid combining multiple calls in a single transaction
+race conditions
+Deprecated functions 
+A signature should never be included into a signed message hash to check if previously messages have been processed by the contract. The ecrecover function is susceptible to signature malleability
+In order to protect against signature replay attacks Store every message hash that has been processed by the smart contract, although an attacker can still bypass this by front-running
+assert is used to check for an invariant state 
+inherit contracts from more general to more specific
+Actions that require looping across the entire data structure should be avoided
+use abi.encode() instead of abi.encodePacked()
+user _safeTransfer for all token transfers to prevent a token implementing a buggy transfer mechanism
+msg.sender.call.value(address(this).balance)("");
+proxies share the same storage space
+use of msg.sender instead of variables such as from/to can disrupt control logic of a function
+
+inheritance:
+* transaction fees are deposited in a valuepool and used to lend money to close relatives of deceased users of the inheritance contract so they can pay for school and other utilities
+
+check auction, purchase of item at a higher price use cases in MarketPlace
+notify potential bill contract after each purchase (useful for processing refund requests).
+
+why now? because of the penetration of blockchain making this the first time in history that this is possible
+
+
+sponsor cards have categories (all, non-violent, non-sexual...) and they can only sponsor channels that have a compatible ad category
+
+football
+soccer
+pickleball
+picketball
+cricket
+basketball
+volleyball
+tennis
+badminton
+table tennis
+golf
+handball
+formula one (car and bike)
+hockey
+rugby
+ping pong 
+bycicle (tour de france)
+100 meters (all olympic games)
+
+
+
+
+updates order
+trade
+options//
+------
+nftickets
+activities
+register
+partner
+requests
+------
+stakeMarket
+bounties
+sponsor nfticket
+------
+ssi
+paywalls
+arps
+sponsorcard
+valuepools
+auditors
+inheritance
+
+
+
+add total trading fee per token per week to auditor & sponsor & marketplace
+add ability to compute vote transaction from the minter based on tradingfee
+
+tests
+===================
+sponsorcard
+trustBounties (balance approvals)
+referralVoter
+acceleratorVoter
+contributorVoter
+ramps
+
+
+mk (registration/review/superlike/like/update/legal)
+trustBounties
+stakeMarket
+valuepool
+auditor/sponsor/business/accelerator/contributor/referral
+ramps
+poolgauge
+
+
+album NFTs contain a mapping from the album title to an enumerable set of media ids as well as a mapping from an event title to an enumerable set of addresses that when called with the user token Id will detect the calling contract and return a custom SVG for the calling token id. This will enable artists to generate autographs or special messages to all their fans that attended an event/concert...
+
+GreenNFTs:
+ - to fight carbon emission by residential buildings (40% of emissions), auditors deliver a nft with the PlusCodes of the areas around the globe to anyone that has decarbonized it (building or else) with the appropriate carbon credit
+
+changes: 
+ * AskInfo in mk events & collection
+ * referralvoter in mk helper
+ * uniqueAccounts in mk helper2
+ * checkIdentityProof in trades & stakeMarket & collection
